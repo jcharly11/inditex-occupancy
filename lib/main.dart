@@ -102,7 +102,7 @@ class MainApp extends StatelessWidget {
         elevation: 1,
         toolbarHeight: 80,
         title: Row(
-  mainAxisAlignment: MainAxisAlignment.end, // todo alineado a la derecha
+  mainAxisAlignment: MainAxisAlignment.end, 
   children: [
     Text(
       'INDITEX',
