@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'database_helper.dart'; // Asegúrate de que este archivo tenga la función consultarYActualizarRegalo()
+import 'database_helper.dart'; 
 
 void main() => runApp(ScreenGift());
 
@@ -9,21 +9,20 @@ class ScreenGift extends StatefulWidget {
 }
 
 class _ScreenGift extends State<ScreenGift> {
-  final dbHelper = BasedatoHelper(); // Instancia del helper
-  final TextEditingController _controller = TextEditingController(); // Controlador del campo de texto
-  String? result; // Resultado a mostrar
+  final dbHelper = BasedatoHelper(); 
+  final TextEditingController _controller = TextEditingController(); 
+  String? result; 
 
   @override
   void initState() {
     super.initState();
-    dbHelper.insertInitialData(); // Inserta datos iniciales si es necesario
+    dbHelper.insertInitialData(); 
   }
 
   Future<void> SearchGift(String id) async {
     final mensaje = await dbHelper.consultarYActualizarRegalo(id);
-    // Usa la nueva función que consulta y actualiza según el estado del regalo
     setState(() {
-      result = mensaje; // Muestra el mensaje devuelto
+      result = mensaje; 
     });
   }
 
