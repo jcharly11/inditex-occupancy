@@ -1,253 +1,134 @@
 import 'package:flutter/material.dart';
+import 'database_helper.dart'; // Asegúrate de que este archivo tenga la función consultarYActualizarRegalo()
 
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: OccupancyDashboard(),
-  ));
+void main() => runApp(ScreenGift());
+
+class ScreenGift extends StatefulWidget {
+  @override
+  State<ScreenGift> createState() => _ScreenGift();
 }
 
-class OccupancyDashboard extends StatelessWidget {
-  const OccupancyDashboard({super.key});
+class _ScreenGift extends State<ScreenGift> {
+  final dbHelper = BasedatoHelper(); // Instancia del helper
+  final TextEditingController _controller = TextEditingController(); // Controlador del campo de texto
+  String? result; // Resultado a mostrar
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper.insertInitialData(); // Inserta datos iniciales si es necesario
+  }
+
+  Future<void> SearchGift(String id) async {
+    final mensaje = await dbHelper.consultarYActualizarRegalo(id);
+    // Usa la nueva función que consulta y actualiza según el estado del regalo
+    setState(() {
+      result = mensaje; // Muestra el mensaje devuelto
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 780, 
-              child: Container(
-                padding: const EdgeInsets.all(32.0),
+    return MaterialApp(
+      title: 'Checkpoint UI',
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Color(0xFF0A1F44),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 400,
+                padding: EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Color(0xFF1E3A8A),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Container(
-                  padding: const EdgeInsets.all(24.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 22, 56, 78), 
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          'assets/images/checkpoint_logo_bco2.png',
+                          height: 32,
+                        ),
+                        Text(
+                          'Last Update: 5 seconds ago',
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24),
+                    Container(
+                      padding: EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF2D4CC8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
                         children: [
-                          Image.asset(
-                            'assets/images/checkpoint_logo_bco2.png',
-                            height: 40,
+                          Text(
+                            'REGALO',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
                           ),
-                          const Text(
-                            'Last update: 5 seconds ago',
-                            style: TextStyle(fontSize: 14, color: Colors.black),
+                          SizedBox(height: 24),
+                          TextField(
+                            controller: _controller,
+                            onSubmitted: SearchGift, 
+                            decoration: InputDecoration(
+                              hintText: 'Search ID...',
+                              hintStyle: TextStyle(color: Colors.white54),
+                              filled: true,
+                              fillColor: Color(0xFF466BF2),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            style: TextStyle(color: Colors.white),
                           ),
+                          SizedBox(height: 24),
+                          if (result != null)
+                            Text(
+                              result!,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                         ],
                       ),
-                      const SizedBox(height: 24),
-
-                      Container(
-                        padding: const EdgeInsets.all(32.0),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 66, 101, 128), 
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                SimpleLabel(label: 'People inside: 310'),
-                                SimpleLabel(label: 'Max Occupancy: 458'),
-                              ],
-                            ),
-
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  children: const [
-                                    LargeRectInfo(label: 'Realtime Occupancy', value: '310', width: 200),
-                                    SizedBox(height: 16),
-                                    RectangularInfo(label: 'Employees inside', value: '100', width: 180),
-                                    SizedBox(height: 16),
-                                    RectangularInfo(label: 'Family & Friends', value: '210', width: 180),
-                                  ],
-                                ),
-                                const Spacer(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    LargeRectInfo(label: 'Available Places', value: '148', width: 200),
-                                    const SizedBox(height: 48),
-                                    SizedBox(
-                                      width: 220,
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Search ID...',
-                                          prefixIcon: const Icon(Icons.search),
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 32.0),
+                  child: ElevatedButton(
+                    onPressed: () => _controller.clear(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    child: Text('Close'),
                   ),
                 ),
               ),
-            ),
-
-            const SizedBox(height: 16),
-
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 64.0),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 121, 4, 4),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  ),
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-
-class SimpleLabel extends StatelessWidget {
-  final String label;
-
-  const SimpleLabel({super.key, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: const TextStyle(fontSize: 14, color: Colors.white),
-    );
-  }
-}
-
-class RectangularInfo extends StatelessWidget {
-  final String label;
-  final String value;
-  final double labelFontSize;
-  final double valueFontSize;
-  final double width;
-
-  const RectangularInfo({
-    super.key,
-    required this.label,
-    required this.value,
-    this.labelFontSize = 10,
-    this.valueFontSize = 15,
-    this.width = 180,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: 75,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: labelFontSize, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: valueFontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class LargeRectInfo extends StatelessWidget {
-  final String label;
-  final String value;
-  final double labelFontSize;
-  final double valueFontSize;
-  final double width;
-
-  const LargeRectInfo({
-    super.key,
-    required this.label,
-    required this.value,
-    this.labelFontSize = 12,
-    this.valueFontSize = 56,
-    this.width = 200,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: 140,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: labelFontSize, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: valueFontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ],
       ),
     );
   }
