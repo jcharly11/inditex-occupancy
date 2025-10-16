@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart'; 
+import 'package:inditex_occupancy/longitud.dart';
 
 void main() => runApp(ScreenGift());
 
@@ -19,12 +20,20 @@ class _ScreenGift extends State<ScreenGift> {
     dbHelper.insertInitialData(); 
   }
 
-  Future<void> SearchGift(String id) async {
-    final mensaje = await dbHelper.consultarYActualizarRegalo(id);
+Future<void> SearchGift(String id) async {
+  if (!validation(id)) {
     setState(() {
-      result = mensaje; 
+      result = 'ID invalido, debe tener 24 caracteres, solo numeros y mayusculas';
     });
+    return;
   }
+
+  final mensaje = await dbHelper.consultarYActualizarRegalo(id);
+  setState(() {
+    result = mensaje;
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -42,10 +42,6 @@ class BasedatoHelper {
   Future<String> consultarYActualizarRegalo(String id) async {
     final db = await _openDB();
 
-    if (id.length < 3 || int.tryParse(id) == null) {
-      return '⚠️';
-    }
-
     final registro = await getRegaloById(id);
 
     if (registro == null) {
