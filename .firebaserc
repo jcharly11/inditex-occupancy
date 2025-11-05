@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "Inditex": "inditex-occupancy",
+    "default": "inditex-occupancy"
+  },
+  "targets": {},
+  "etags": {}
+}

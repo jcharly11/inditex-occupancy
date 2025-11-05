@@ -1,82 +1,62 @@
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:inditex_occupancy/data/models/enrich_firebase_model.dart';
-import 'package:inditex_occupancy/data/models/mqtt_data_firebase_model.dart';
-
 class EventsFirebaseModel {
-  final String customerName;
+  final int? id;
+  final String uuid;
+  final String accountNumber;
+  final String storeId;
+  final String eventId;
+  final int silent;
+  final String groupId;
+  final int timestamp;
   final String deviceId;
   final String deviceModel;
-  final String doorName;
-  final List<EnrichFirebaseModel> enrich;
-  final String eventId;
-  final String groupId;
-  final String mediaLink;
-  final bool silent;
-  final String storeName;
-  final Timestamp timestamp;
-  final String? uuid;
   final String technology;
-  final List<MqttDataFirebaseModel> mqttdata;
-  
+  final String doorName;
 
+  EventsFirebaseModel({
+    this.id,
+    required this.uuid,
+    required this.accountNumber,
+    required this.storeId,
+    required this.eventId,
+    required this.silent,
+    required this.groupId,
+    required this.timestamp,
+    required this.deviceId,
+    required this.deviceModel,
+    required this.technology,
+    required this.doorName,
+  });
 
-
-  factory EventsFirebaseModel.fromMap(Map<String, dynamic> data) {
-    var enrichData = data['enriched'] as List<dynamic>? ?? [];
-    var mqttData = data['mqttdata'] as List<dynamic>? ?? [];
-
-    var enrichDataList = enrichData
-        .map((p) => EnrichFirebaseModel.fromMap(Map<String, dynamic>.from(p)))
-        .toList();
-
-    var mqttDataList = mqttData
-        .map((p) => MqttDataFirebaseModel.fromMap(Map<String, dynamic>.from(p)))
-        .toList();
-    
-
+  factory EventsFirebaseModel.fromMap(Map<String, dynamic> map) {
     return EventsFirebaseModel(
-      customerName: data['customerName'] ?? '',
-      deviceId: data['deviceId'] ?? '',
-      deviceModel: data['deviceModel'] ?? '',
-      doorName: data['doorName'] ?? '',
-      eventId: data['eventId'] ?? '',
-      groupId: data['groupId'] ?? '',
-      mediaLink: data['mediaLink'] ?? '',
-      silent: data['silent'] == 1 ? true : false,
-      storeName: data['storeName'] ?? '',
-      timestamp: data['timestamp'] is int
-      ? Timestamp.fromMillisecondsSinceEpoch(data['timestamp'])
-      : data['timestamp'] as Timestamp,
-      uuid: data['uuid'] ?? '',
-      enrich: enrichDataList,
-      technology: data["technology"] ?? '',
-      mqttdata: mqttDataList
-
+      id: map['id'] as int?,
+      uuid: map['uuid'] ?? '',
+      accountNumber: map['accountNumber'] ?? '',
+      storeId: map['storeId'] ?? '',
+      eventId: map['eventId'] ?? '',
+      silent: map['silent'] ?? 0,
+      groupId: map['groupId'] ?? '',
+      timestamp: map['timestamp'] ?? 0,
+      deviceId: map['deviceId'] ?? '',
+      deviceModel: map['deviceModel'] ?? '',
+      technology: map['technology'] ?? '',
+      doorName: map['doorName'] ?? '',
     );
   }
 
-  EventsFirebaseModel({required this.customerName, required this.deviceId, required this.deviceModel, required this.doorName, required this.enrich, required this.eventId, required this.groupId, required this.mediaLink, required this.silent, required this.storeName, required this.timestamp, required this.uuid, required this.technology, required this.mqttdata});
-
-
-   Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
-      'customerName': customerName,
+      'uuid': uuid,
+      'accountNumber': accountNumber,
+      'storeId': storeId,
+      'eventId': eventId,
+      'silent': silent,
+      'groupId': groupId,
+      'timestamp': timestamp,
       'deviceId': deviceId,
       'deviceModel': deviceModel,
-      'doorName': doorName,
-      'eventId': eventId,
-      'groupId': groupId,
-      'mediaLink': mediaLink,
-      'silent': silent,
-      'storeName': storeName,
-      'timestamp': timestamp,
-      'uuid': uuid,
-      'enrich': enrich,
       'technology': technology,
-      'mqttdata' : mqttdata
+      'doorName': doorName,
     };
   }
-
 }
